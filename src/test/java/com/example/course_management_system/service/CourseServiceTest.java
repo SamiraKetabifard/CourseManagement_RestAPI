@@ -46,40 +46,32 @@ class CourseServiceTest {
         when(modelMapper.map(any(CourseDTO.class), eq(Course.class))).thenReturn(course);
         when(courseRepository.save(any(Course.class))).thenReturn(course);
         when(modelMapper.map(any(Course.class), eq(CourseDTO.class))).thenReturn(courseDTO);
-
         // Act
         CourseDTO result = courseService.createCourse(courseDTO);
-
         // Assert
         assertNotNull(result);
         assertEquals(1L, result.getId());
         verify(courseRepository).save(any(Course.class));
     }
-
     @Test
     void getCourseById_ShouldReturnCourseDTO() {
         // Arrange
         when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
         when(modelMapper.map(any(Course.class), eq(CourseDTO.class))).thenReturn(courseDTO);
-
         // Act
         CourseDTO result = courseService.getCourseById(1L);
-
         // Assert
         assertNotNull(result);
         assertEquals("Math", result.getName());
     }
-
     @Test
     void getCourseById_WhenNotFound_ShouldThrowException() {
         // Arrange
         when(courseRepository.findById(2L)).thenReturn(Optional.empty());
-
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () ->
                 courseService.getCourseById(2L));
     }
-
     @Test
     void getAllCourses_ShouldReturnPage() {
         // Arrange
@@ -88,59 +80,47 @@ class CourseServiceTest {
 
         when(courseRepository.findAll(pageable)).thenReturn(page);
         when(modelMapper.map(any(Course.class), eq(CourseDTO.class))).thenReturn(courseDTO);
-
         // Act
         Page<CourseDTO> result = courseService.getAllCourses(0, 10, "name", "asc");
-
         // Assert
         assertEquals(1, result.getTotalElements());
         assertEquals("Math", result.getContent().get(0).getName());
     }
-
     @Test
     void updateCourse_ShouldReturnUpdatedCourse() {
         // Arrange
         when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
         when(courseRepository.save(any(Course.class))).thenReturn(course);
         when(modelMapper.map(any(Course.class), eq(CourseDTO.class))).thenReturn(courseDTO);
-
         // Act
         CourseDTO result = courseService.updateCourse(1L, courseDTO);
-
         // Assert
         assertNotNull(result);
         assertEquals(1L, result.getId());
         verify(courseRepository).save(any(Course.class));
     }
-
     @Test
     void updateCourse_WhenNotFound_ShouldThrowException() {
         // Arrange
         when(courseRepository.findById(2L)).thenReturn(Optional.empty());
-
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () ->
                 courseService.updateCourse(2L, courseDTO));
     }
-
     @Test
     void deleteCourse_ShouldDeleteWhenExists() {
         // Arrange
         when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
         willDoNothing().given(courseRepository).delete(any(Course.class));
-
         // Act
         courseService.deleteCourse(1L);
-
         // Assert
         verify(courseRepository).delete(any(Course.class));
     }
-
     @Test
     void deleteCourse_WhenNotFound_ShouldThrowException() {
         // Arrange
         when(courseRepository.findById(2L)).thenReturn(Optional.empty());
-
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () ->
                 courseService.deleteCourse(2L));

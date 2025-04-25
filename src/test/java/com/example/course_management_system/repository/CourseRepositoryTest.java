@@ -57,8 +57,9 @@ class CourseRepositoryTest {
     @Test
     void shouldFindCourseById() {
         // Arrange
-        Course course = new Course();
-        course.setName("Physics");
+        Course course= Course.builder().
+                name("Physics").
+                build();
         Course savedCourse = courseRepository.save(course);
         // Act
         Course foundCourse = courseRepository.findById(savedCourse.getId()).orElse(null);
@@ -84,8 +85,9 @@ class CourseRepositoryTest {
     @Test
     void shouldUpdateCourse() {
         // Arrange
-        Course course = new Course();
-        course.setName("Math");
+        Course course = Course.builder()
+                .name("Math")
+                .build();
         Course savedCourse = courseRepository.save(course);
         // Act
         savedCourse.setName("Math2");
@@ -98,8 +100,9 @@ class CourseRepositoryTest {
     @Test
     void shouldDeleteCourseById() {
         // Arrange
-        Course course = new Course();
-        course.setName("Math");
+        Course course = Course.builder()
+                .name("Math")
+                .build();
         Course savedCourse = courseRepository.save(course);
         // Act
         courseRepository.deleteById(savedCourse.getId());

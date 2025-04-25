@@ -35,10 +35,8 @@ class StudentRepositoryTest {
         registry.add("spring.datasource.username", mysql::getUsername);
         registry.add("spring.datasource.password", mysql::getPassword);
     }
-
     @Autowired
     private StudentRepository studentRepository;
-
     @Autowired
     private CourseRepository courseRepository;
 
@@ -47,53 +45,79 @@ class StudentRepositoryTest {
         studentRepository.deleteAll();
         courseRepository.deleteAll();
     }
-
-    @Test
-    void shouldSaveStudentWithCourse() {
-        // Arrange
-        Course course = courseRepository.save(new Course(null, "Math", null));
-        Student student = new Student(null, "samira", "samira@gmail.com", course);
-
-        // Act
-        Student savedStudent = studentRepository.save(student);
-
-        // Assert
-        assertNotNull(savedStudent.getId());
-        assertEquals("samira", savedStudent.getName());
-        assertEquals(course.getId(), savedStudent.getCourse().getId());
-    }
-
+        @Test
+        void shouldSaveStudentWithCourse() {
+            // Arrange
+            Course course = courseRepository.save(Course.builder()
+                            .name("Math")
+                            .build());
+            Student student = Student.builder()
+                    .name("samira")
+                    .email("samira@gmail.com")
+                    .course(course)
+                    .build();
+            // Act
+            Student savedStudent = studentRepository.save(student);
+            // Assert
+            assertNotNull(savedStudent.getId());
+            assertEquals("samira", savedStudent.getName());
+            assertEquals(course.getId(), savedStudent.getCourse().getId());
+        }
     @Test
     void shouldFindStudentsByCourseId() {
         // Arrange
-        Course mathCourse = courseRepository.save(new Course(null, "Math", null));
-        Course physicsCourse = courseRepository.save(new Course(null, "Physics", null));
-
-        studentRepository.save(new Student(null, "zahra", "zahra@gmail.com", mathCourse));
-        studentRepository.save(new Student(null, "roz", "roz@gmail.com", mathCourse));
-        studentRepository.save(new Student(null, "nazi", "nazi@gmail.com", physicsCourse));
-
+        Course mathCourse = courseRepository.save(Course.builder()
+                        .name("Math")
+                        .build());
+        Course physicsCourse = courseRepository.save(Course.builder()
+                        .name("Physics")
+                        .build());
+        studentRepository.save(Student.builder()
+                        .name("zahra")
+                        .email("zahra@gmail.com")
+                        .course(mathCourse)
+                        .build());
+        studentRepository.save(Student.builder()
+                        .name("roz")
+                        .email("roz@gmail.com")
+                        .course(mathCourse)
+                        .build());
+        studentRepository.save(Student.builder()
+                        .name("nazi")
+                        .email("nazi@gmail.com")
+                        .course(physicsCourse)
+                        .build());
         // Act
         List<Student> mathStudents = studentRepository.findByCourseId(mathCourse.getId());
-
         // Assert
         assertEquals(2, mathStudents.size());
         assertTrue(mathStudents.stream().allMatch(s -> s.getCourse().getId().equals(mathCourse.getId())));
     }
-
     @Test
     void shouldReturnAllStudentsWithPagination() {
         // Arrange
-        Course course = courseRepository.save(new Course(null, "Math", null));
-        studentRepository.save(new Student(null, "zahra", "zahra@gmail.com", course));
-        studentRepository.save(new Student(null, "roz", "roz@gmail.com", course));
-        studentRepository.save(new Student(null, "nazi", "nazi@gmail.com", course));
-
+        Course course = courseRepository.save(
+                Course.builder()
+                        .name("Math")
+                        .build());
+        studentRepository.save(Student.builder()
+                        .name("zahra")
+                        .email("zahra@gmail.com")
+                        .course(course)
+                        .build());
+        studentRepository.save(Student.builder()
+                        .name("roz")
+                        .email("roz@gmail.com")
+                        .course(course)
+                        .build());
+        studentRepository.save(Student.builder()
+                        .name("nazi")
+                        .email("nazi@gmail.com")
+                        .course(course)
+                        .build());
         Pageable pageable = PageRequest.of(0, 2);
-
         // Act
         Page<Student> studentsPage = studentRepository.findAll(pageable);
-
         // Assert
         assertEquals(3, studentsPage.getTotalElements());
         assertEquals(2, studentsPage.getContent().size());
