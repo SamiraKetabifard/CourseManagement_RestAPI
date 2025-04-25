@@ -38,8 +38,7 @@ class StudentControllerTest {
     @Test
     void createStudent_ShouldReturnCreated() throws Exception {
         // Arrange
-        given(studentService.createStudent(any())).willReturn(studentDTO);
-
+        given(studentService.createStudent(any(StudentDTO.class))).willReturn(studentDTO);
         // Act & Assert
         mockMvc.perform(post("/students/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -49,26 +48,12 @@ class StudentControllerTest {
                 .andExpect(jsonPath("$.name").value("samira"))
                 .andExpect(jsonPath("$.email").value("samira@gmail.com"));
     }
-
-    @Test
-    void getStudentById_ShouldReturnStudent() throws Exception {
-        // Arrange
-        given(studentService.getStudentById(1L)).willReturn(studentDTO);
-
-        // Act & Assert
-        mockMvc.perform(get("/students/get/{id}", 1L))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("samira"));
-    }
-
     @Test
     void getAllStudents_ShouldReturnPage() throws Exception {
         // Arrange
         Page<StudentDTO> page = new PageImpl<>(List.of(studentDTO));
         given(studentService.getAllStudents(anyInt(), anyInt(), anyString(), anyString()))
                 .willReturn(page);
-
         // Act & Assert
         mockMvc.perform(get("/students/getall")
                         .param("page", "0")
@@ -79,24 +64,40 @@ class StudentControllerTest {
                 .andExpect(jsonPath("$.content[0].id").value(1L))
                 .andExpect(jsonPath("$.content[0].name").value("samira"));
     }
-
+    @Test
+    void getStudentById_ShouldReturnStudent() throws Exception {
+        // Arrange
+        given(studentService.getStudentById(1L)).willReturn(studentDTO);
+        // Act & Assert
+        mockMvc.perform(get("/students/get/{id}", 1L))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.name").value("samira"));
+    }
+    @Test
+    void getStudentById_WhenNotFound_ShouldReturn404() throws Exception {
+        // Arrange
+        given(studentService.getStudentById(2L))
+                .willThrow(new ResourceNotFoundException("Student not found"));
+        // Act & Assert
+        mockMvc.perform(get("/students/get/{id}", 2L))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Student not found"));
+    }
     @Test
     void getStudentsByCourseId_ShouldReturnList() throws Exception {
         // Arrange
         given(studentService.getStudentsByCourseId(1L)).willReturn(List.of(studentDTO));
-
         // Act & Assert
         mockMvc.perform(get("/students/getcourse/{courseId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].courseId").value(1L));
     }
-
     @Test
     void updateStudent_ShouldReturnUpdatedStudent() throws Exception {
         // Arrange
-        given(studentService.updateStudent(eq(1L), any())).willReturn(studentDTO);
-
+        given(studentService.updateStudent(eq(1L), any(StudentDTO.class))).willReturn(studentDTO);
         // Act & Assert
         mockMvc.perform(put("/students/edit/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -105,27 +106,13 @@ class StudentControllerTest {
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("samira"));
     }
-
     @Test
     void deleteStudent_ShouldReturnNoContent() throws Exception {
         // Arrange
         willDoNothing().given(studentService).deleteStudent(1L);
-
         // Act & Assert
         mockMvc.perform(delete("/students/del/{id}", 1L))
                 .andExpect(status().isNoContent())
                 .andExpect(content().string("Student deleted"));
-    }
-
-    @Test
-    void getStudentById_WhenNotFound_ShouldReturn404() throws Exception {
-        // Arrange
-        given(studentService.getStudentById(2L))
-                .willThrow(new ResourceNotFoundException("Student not found"));
-
-        // Act & Assert
-        mockMvc.perform(get("/students/get/{id}", 2L))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string("Student not found"));
     }
 }

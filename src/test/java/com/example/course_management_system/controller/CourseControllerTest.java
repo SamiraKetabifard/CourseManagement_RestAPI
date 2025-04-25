@@ -103,7 +103,6 @@ class CourseControllerTest {
         // Arrange
         given(courseService.updateCourse(eq(2L), any(CourseDTO.class)))
                 .willThrow(new ResourceNotFoundException("Course not found"));
-
         // Act & Assert
         mockMvc.perform(put("/courses/edit/{id}", 2L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -126,7 +125,6 @@ class CourseControllerTest {
         // Arrange
         willThrow(new ResourceNotFoundException("Course not found"))
                 .given(courseService).deleteCourse(2L);
-
         // Act & Assert
         mockMvc.perform(delete("/courses/del/{id}", 2L))
                 .andExpect(status().isNotFound())
