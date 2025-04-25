@@ -34,7 +34,6 @@ class CourseRepositoryTest {
         registry.add("spring.datasource.username", mysql::getUsername);
         registry.add("spring.datasource.password", mysql::getPassword);
     }
-
     @Autowired
     private CourseRepository courseRepository;
 
@@ -43,37 +42,31 @@ class CourseRepositoryTest {
         // Clear data before each test
         courseRepository.deleteAll();
     }
-
     @Test
     void shouldSaveCourse() {
         // Arrange
-        Course course = new Course();
-        course.setName("Math");
-
+        Course course = Course.builder()
+                .name("Math")
+                .build();
         // Act
         Course savedCourse = courseRepository.save(course);
-
         // Assert
         assertNotNull(savedCourse.getId());
         assertEquals("Math", savedCourse.getName());
     }
-
     @Test
     void shouldFindCourseById() {
         // Arrange
         Course course = new Course();
         course.setName("Physics");
         Course savedCourse = courseRepository.save(course);
-
         // Act
         Course foundCourse = courseRepository.findById(savedCourse.getId()).orElse(null);
-
         // Assert
         assertNotNull(foundCourse);
         assertEquals(savedCourse.getId(), foundCourse.getId());
         assertEquals("Physics", foundCourse.getName());
     }
-
     @Test
     void shouldReturnAllCoursesWithPagination() {
         // Arrange
@@ -82,10 +75,8 @@ class CourseRepositoryTest {
         courseRepository.save(new Course(null, "Chemistry", null));
 
         Pageable pageable = PageRequest.of(0, 2);
-
         // Act
         Page<Course> coursesPage = courseRepository.findAll(pageable);
-
         // Assert
         assertEquals(3, coursesPage.getTotalElements());
         assertEquals(2, coursesPage.getContent().size());
@@ -96,11 +87,9 @@ class CourseRepositoryTest {
         Course course = new Course();
         course.setName("Math");
         Course savedCourse = courseRepository.save(course);
-
         // Act
         savedCourse.setName("Math2");
         Course updatedCourse = courseRepository.save(savedCourse);
-
         // Assert
         assertNotNull(updatedCourse);
         assertEquals(savedCourse.getId(), updatedCourse.getId());
@@ -112,13 +101,10 @@ class CourseRepositoryTest {
         Course course = new Course();
         course.setName("Math");
         Course savedCourse = courseRepository.save(course);
-
         // Act
         courseRepository.deleteById(savedCourse.getId());
-
         // Assert
         Optional<Course> deletedCourse = courseRepository.findById(savedCourse.getId());
         assertTrue(deletedCourse.isEmpty());
     }
-
 }
