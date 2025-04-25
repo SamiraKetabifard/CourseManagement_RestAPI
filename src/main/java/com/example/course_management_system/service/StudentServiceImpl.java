@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,7 +69,8 @@ public class StudentServiceImpl implements StudentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
 
         Course course = courseRepository.findById(studentDTO.getCourseId())
-                .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + studentDTO.getCourseId()));
+                .orElseThrow(() -> new ResourceNotFoundException
+                        ("Course not found with id: " + studentDTO.getCourseId()));
 
         existingStudent.setName(studentDTO.getName());
         existingStudent.setEmail(studentDTO.getEmail());

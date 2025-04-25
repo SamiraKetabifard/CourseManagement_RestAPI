@@ -2,13 +2,13 @@ package com.example.course_management_system.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
-@Table(name = "students")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
+@Table(name = "students")
 public class Student {
 
     @Id
@@ -21,7 +21,7 @@ public class Student {
     @Column(nullable = false, unique = true)
     private String email;
 
-    //Bidirectional
+    //BiDirectional
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;

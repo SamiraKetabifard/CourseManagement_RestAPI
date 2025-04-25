@@ -73,11 +73,11 @@ class CourseServiceTest {
     @Test
     void getCourseById_WhenNotFound_ShouldThrowException() {
         // Arrange
-        when(courseRepository.findById(99L)).thenReturn(Optional.empty());
+        when(courseRepository.findById(2L)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () ->
-                courseService.getCourseById(99L));
+                courseService.getCourseById(2L));
     }
 
     @Test
@@ -116,11 +116,11 @@ class CourseServiceTest {
     @Test
     void updateCourse_WhenNotFound_ShouldThrowException() {
         // Arrange
-        when(courseRepository.findById(99L)).thenReturn(Optional.empty());
+        when(courseRepository.findById(2L)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () ->
-                courseService.updateCourse(99L, courseDTO));
+                courseService.updateCourse(2L, courseDTO));
     }
 
     @Test
@@ -139,10 +139,10 @@ class CourseServiceTest {
     @Test
     void deleteCourse_WhenNotFound_ShouldThrowException() {
         // Arrange
-        when(courseRepository.findById(99L)).thenReturn(Optional.empty());
+        when(courseRepository.findById(2L)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () ->
-                courseService.deleteCourse(99L));
+                courseService.deleteCourse(2L));
     }
 }

@@ -1,7 +1,6 @@
 package com.example.course_management_system.service;
 import com.example.course_management_system.dto.StudentDTO;
 import org.springframework.data.domain.Page;
-
 import java.util.List;
 
 public interface StudentService {

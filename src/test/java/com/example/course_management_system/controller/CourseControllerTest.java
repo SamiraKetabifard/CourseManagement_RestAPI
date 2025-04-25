@@ -17,6 +17,7 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+//for controller layer
 @WebMvcTest(CourseController.class)
 class CourseControllerTest {
 
@@ -38,7 +39,6 @@ class CourseControllerTest {
     void createCourse_ShouldReturnCreatedCourse() throws Exception {
         // Arrange
         given(courseService.createCourse(any(CourseDTO.class))).willReturn(courseDTO);
-
         // Act & Assert
         mockMvc.perform(post("/courses/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -47,31 +47,26 @@ class CourseControllerTest {
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Math"));
     }
-
     @Test
     void getCourseById_ShouldReturnCourse() throws Exception {
         // Arrange
         given(courseService.getCourseById(1L)).willReturn(courseDTO);
-
         // Act & Assert
         mockMvc.perform(get("/courses/get/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Math"));
     }
-
     @Test
     void getCourseById_WhenNotFound_ShouldReturn404() throws Exception {
         // Arrange
-        given(courseService.getCourseById(99L))
+        given(courseService.getCourseById(2L))
                 .willThrow(new ResourceNotFoundException("Course not found"));
-
         // Act & Assert
-        mockMvc.perform(get("/courses/get/{id}", 99L))
+        mockMvc.perform(get("/courses/get/{id}", 2L))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Course not found"));
     }
-
     @Test
     void getAllCourses_ShouldReturnPagedResults() throws Exception {
         // Arrange
@@ -103,21 +98,19 @@ class CourseControllerTest {
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Math"));
     }
-
     @Test
     void updateCourse_WhenNotFound_ShouldReturn404() throws Exception {
         // Arrange
-        given(courseService.updateCourse(eq(99L), any(CourseDTO.class)))
+        given(courseService.updateCourse(eq(2L), any(CourseDTO.class)))
                 .willThrow(new ResourceNotFoundException("Course not found"));
 
         // Act & Assert
-        mockMvc.perform(put("/courses/edit/{id}", 99L)
+        mockMvc.perform(put("/courses/edit/{id}", 2L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(courseDTO)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Course not found"));
     }
-
     @Test
     void deleteCourse_ShouldReturnNoContent() throws Exception {
         // Arrange
@@ -128,15 +121,14 @@ class CourseControllerTest {
                 .andExpect(status().isNoContent())
                 .andExpect(content().string("Course deleted"));
     }
-
     @Test
     void deleteCourse_WhenNotFound_ShouldReturn404() throws Exception {
         // Arrange
         willThrow(new ResourceNotFoundException("Course not found"))
-                .given(courseService).deleteCourse(99L);
+                .given(courseService).deleteCourse(2L);
 
         // Act & Assert
-        mockMvc.perform(delete("/courses/del/{id}", 99L))
+        mockMvc.perform(delete("/courses/del/{id}", 2L))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Course not found"));
     }

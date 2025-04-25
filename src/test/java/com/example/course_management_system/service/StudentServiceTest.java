@@ -23,10 +23,14 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 
-    @Mock private StudentRepository studentRepository;
-    @Mock private CourseRepository courseRepository;
-    @Mock private ModelMapper modelMapper;
-    @InjectMocks private StudentServiceImpl studentService;
+    @Mock
+    private StudentRepository studentRepository;
+    @Mock
+    private CourseRepository courseRepository;
+    @Mock
+    private ModelMapper modelMapper;
+    @InjectMocks
+    private StudentServiceImpl studentService;
 
     private final Student student = Student.builder()
             .id(1L)
@@ -76,11 +80,11 @@ class StudentServiceTest {
     @Test
     void getStudentById_WhenNotFound_ShouldThrowException() {
         // Arrange
-        when(studentRepository.findById(99L)).thenReturn(Optional.empty());
+        when(studentRepository.findById(2L)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () ->
-                studentService.getStudentById(99L));
+                studentService.getStudentById(2L));
     }
 
     @Test
@@ -148,10 +152,10 @@ class StudentServiceTest {
     @Test
     void deleteStudent_WhenNotFound_ShouldThrowException() {
         // Arrange
-        when(studentRepository.findById(99L)).thenReturn(Optional.empty());
+        when(studentRepository.findById(2L)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () ->
-                studentService.deleteStudent(99L));
+                studentService.deleteStudent(2L));
     }
 }

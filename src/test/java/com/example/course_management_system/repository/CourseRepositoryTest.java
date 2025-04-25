@@ -14,6 +14,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -89,4 +90,35 @@ class CourseRepositoryTest {
         assertEquals(3, coursesPage.getTotalElements());
         assertEquals(2, coursesPage.getContent().size());
     }
+    @Test
+    void shouldUpdateCourse() {
+        // Arrange
+        Course course = new Course();
+        course.setName("Math");
+        Course savedCourse = courseRepository.save(course);
+
+        // Act
+        savedCourse.setName("Math2");
+        Course updatedCourse = courseRepository.save(savedCourse);
+
+        // Assert
+        assertNotNull(updatedCourse);
+        assertEquals(savedCourse.getId(), updatedCourse.getId());
+        assertEquals("Math2", updatedCourse.getName());
+    }
+    @Test
+    void shouldDeleteCourseById() {
+        // Arrange
+        Course course = new Course();
+        course.setName("Math");
+        Course savedCourse = courseRepository.save(course);
+
+        // Act
+        courseRepository.deleteById(savedCourse.getId());
+
+        // Assert
+        Optional<Course> deletedCourse = courseRepository.findById(savedCourse.getId());
+        assertTrue(deletedCourse.isEmpty());
+    }
+
 }

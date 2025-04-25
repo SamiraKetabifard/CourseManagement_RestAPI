@@ -120,11 +120,11 @@ class StudentControllerTest {
     @Test
     void getStudentById_WhenNotFound_ShouldReturn404() throws Exception {
         // Arrange
-        given(studentService.getStudentById(99L))
+        given(studentService.getStudentById(2L))
                 .willThrow(new ResourceNotFoundException("Student not found"));
 
         // Act & Assert
-        mockMvc.perform(get("/students/get/{id}", 99L))
+        mockMvc.perform(get("/students/get/{id}", 2L))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Student not found"));
     }

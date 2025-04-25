@@ -20,7 +20,7 @@ public class Course {
     @Column(nullable = false, unique = true)
     private String name;
 
-    //Bidirectional
+    //BiDirectional
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL,orphanRemoval = true)
     @Builder.Default
     private List<Student> students = new ArrayList<>();
