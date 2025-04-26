@@ -53,40 +53,32 @@ class StudentServiceTest {
         when(modelMapper.map(any(StudentDTO.class), eq(Student.class))).thenReturn(student);
         when(studentRepository.save(any())).thenReturn(student);
         when(modelMapper.map(any(Student.class), eq(StudentDTO.class))).thenReturn(studentDTO);
-
         // Act
         StudentDTO result = studentService.createStudent(studentDTO);
-
         // Assert
         assertNotNull(result);
         assertEquals(1L, result.getId());
         verify(studentRepository).save(any());
     }
-
     @Test
     void getStudentById_ShouldReturnStudentDTO() {
         // Arrange
         when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
         when(modelMapper.map(any(Student.class), eq(StudentDTO.class))).thenReturn(studentDTO);
-
         // Act
         StudentDTO result = studentService.getStudentById(1L);
-
         // Assert
         assertNotNull(result);
         assertEquals("samira", result.getName());
     }
-
     @Test
     void getStudentById_WhenNotFound_ShouldThrowException() {
         // Arrange
         when(studentRepository.findById(2L)).thenReturn(Optional.empty());
-
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () ->
                 studentService.getStudentById(2L));
     }
-
     @Test
     void getAllStudents_ShouldReturnPage() {
         // Arrange
@@ -110,15 +102,12 @@ class StudentServiceTest {
         // Arrange
         when(studentRepository.findByCourseId(1L)).thenReturn(List.of(student));
         when(modelMapper.map(any(Student.class), eq(StudentDTO.class))).thenReturn(studentDTO);
-
         // Act
         List<StudentDTO> result = studentService.getStudentsByCourseId(1L);
-
         // Assert
         assertEquals(1, result.size());
         assertEquals(1L, result.get(0).getId());
     }
-
     @Test
     void updateStudent_ShouldReturnUpdatedStudent() {
         // Arrange
@@ -126,34 +115,27 @@ class StudentServiceTest {
         when(courseRepository.findById(1L)).thenReturn(Optional.of(new Course()));
         when(studentRepository.save(any())).thenReturn(student);
         when(modelMapper.map(any(Student.class), eq(StudentDTO.class))).thenReturn(studentDTO);
-
         // Act
         StudentDTO result = studentService.updateStudent(1L, studentDTO);
-
         // Assert
         assertNotNull(result);
         assertEquals(1L, result.getId());
         verify(studentRepository).save(any());
     }
-
     @Test
     void deleteStudent_ShouldDeleteWhenExists() {
         // Arrange
         when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
         willDoNothing().given(studentRepository).delete(any());
-
         // Act
         studentService.deleteStudent(1L);
-
         // Assert
         verify(studentRepository).delete(any());
     }
-
     @Test
     void deleteStudent_WhenNotFound_ShouldThrowException() {
         // Arrange
         when(studentRepository.findById(2L)).thenReturn(Optional.empty());
-
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () ->
                 studentService.deleteStudent(2L));

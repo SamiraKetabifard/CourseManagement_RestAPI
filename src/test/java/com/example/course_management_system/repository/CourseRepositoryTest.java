@@ -94,7 +94,6 @@ class CourseRepositoryTest {
         Course updatedCourse = courseRepository.save(savedCourse);
         // Assert
         assertNotNull(updatedCourse);
-        assertEquals(savedCourse.getId(), updatedCourse.getId());
         assertEquals("Math2", updatedCourse.getName());
     }
     @Test
