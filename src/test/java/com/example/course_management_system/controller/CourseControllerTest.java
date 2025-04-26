@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -67,13 +69,13 @@ class CourseControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Course not found"));
     }
+    // Page<CourseDTO> getAllCourses(int page, int size, String sortBy, String sortDir);
     @Test
     void getAllCourses_ShouldReturnPagedResults() throws Exception {
         // Arrange
-        Page<CourseDTO> page = new PageImpl<>(Collections.singletonList(courseDTO));
+        Page<CourseDTO> page = new PageImpl<>(List.of(courseDTO));
         given(courseService.getAllCourses(anyInt(), anyInt(), anyString(), anyString()))
                 .willReturn(page);
-
         // Act & Assert
         mockMvc.perform(get("/courses/getall")
                         .param("page", "0")
@@ -84,12 +86,10 @@ class CourseControllerTest {
                 .andExpect(jsonPath("$.content[0].id").value(1L))
                 .andExpect(jsonPath("$.content[0].name").value("Math"));
     }
-
     @Test
     void updateCourse_ShouldReturnUpdatedCourse() throws Exception {
         // Arrange
         given(courseService.updateCourse(eq(1L), any(CourseDTO.class))).willReturn(courseDTO);
-
         // Act & Assert
         mockMvc.perform(put("/courses/edit/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -114,7 +114,6 @@ class CourseControllerTest {
     void deleteCourse_ShouldReturnNoContent() throws Exception {
         // Arrange
         willDoNothing().given(courseService).deleteCourse(1L);
-
         // Act & Assert
         mockMvc.perform(delete("/courses/del/{id}", 1L))
                 .andExpect(status().isNoContent())

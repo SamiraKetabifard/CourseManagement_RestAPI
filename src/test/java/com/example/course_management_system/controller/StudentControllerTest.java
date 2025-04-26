@@ -48,6 +48,7 @@ class StudentControllerTest {
                 .andExpect(jsonPath("$.name").value("samira"))
                 .andExpect(jsonPath("$.email").value("samira@gmail.com"));
     }
+    //  Page<StudentDTO> getAllStudents(int page, int size, String sortBy, String sortDir);
     @Test
     void getAllStudents_ShouldReturnPage() throws Exception {
         // Arrange
@@ -84,6 +85,7 @@ class StudentControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Student not found"));
     }
+    //  List<StudentDTO> getStudentsByCourseId(Long courseId);
     @Test
     void getStudentsByCourseId_ShouldReturnList() throws Exception {
         // Arrange
