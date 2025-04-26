@@ -48,7 +48,7 @@ class StudentControllerTest {
                 .andExpect(jsonPath("$.name").value("samira"))
                 .andExpect(jsonPath("$.email").value("samira@gmail.com"));
     }
-    //  Page<StudentDTO> getAllStudents(int page, int size, String sortBy, String sortDir);
+    //  Page <StudentDTO>getAllStudents(int page, int size, String sortBy, String sortDir);
     @Test
     void getAllStudents_ShouldReturnPage() throws Exception {
         // Arrange

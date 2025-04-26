@@ -91,10 +91,11 @@ class CourseRepositoryTest {
         Course savedCourse = courseRepository.save(course);
         // Act
         savedCourse.setName("Math2");
-        Course updatedCourse = courseRepository.save(savedCourse);
+        courseRepository.save(savedCourse);
+        Course foundCourse = courseRepository.findById(savedCourse.getId()).orElseThrow();
         // Assert
-        assertNotNull(updatedCourse);
-        assertEquals("Math2", updatedCourse.getName());
+        assertNotNull(foundCourse);
+        assertEquals("Math2", foundCourse.getName());
     }
     @Test
     void shouldDeleteCourseById() {
