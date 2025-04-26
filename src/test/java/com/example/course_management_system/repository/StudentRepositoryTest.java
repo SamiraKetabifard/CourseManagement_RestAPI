@@ -83,13 +83,13 @@ class StudentRepositoryTest {
         List<Student> mathStudents = studentRepository.findByCourseId(mathCourse.getId());
         // Assert
         assertEquals(2, mathStudents.size());
+        // Check if all students have the same course ID as mathCourse
         assertTrue(mathStudents.stream().allMatch(s -> s.getCourse().getId().equals(mathCourse.getId())));
     }
     @Test
     void shouldReturnAllStudentsWithPagination() {
         // Arrange
-        Course course = courseRepository.save(
-                Course.builder()
+        Course course = courseRepository.save(Course.builder()
                         .name("Math")
                         .build());
         studentRepository.save(Student.builder()
