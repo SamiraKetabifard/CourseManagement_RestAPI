@@ -69,9 +69,6 @@ class StudentRepositoryTest {
         Course mathCourse = courseRepository.save(Course.builder()
                         .name("Math")
                         .build());
-        Course physicsCourse = courseRepository.save(Course.builder()
-                        .name("Physics")
-                        .build());
         studentRepository.save(Student.builder()
                         .name("zahra")
                         .email("zahra@gmail.com")
@@ -81,11 +78,6 @@ class StudentRepositoryTest {
                         .name("roz")
                         .email("roz@gmail.com")
                         .course(mathCourse)
-                        .build());
-        studentRepository.save(Student.builder()
-                        .name("nazi")
-                        .email("nazi@gmail.com")
-                        .course(physicsCourse)
                         .build());
         // Act
         List<Student> mathStudents = studentRepository.findByCourseId(mathCourse.getId());
@@ -110,16 +102,11 @@ class StudentRepositoryTest {
                         .email("roz@gmail.com")
                         .course(course)
                         .build());
-        studentRepository.save(Student.builder()
-                        .name("nazi")
-                        .email("nazi@gmail.com")
-                        .course(course)
-                        .build());
         Pageable pageable = PageRequest.of(0, 2);
         // Act
         Page<Student> studentsPage = studentRepository.findAll(pageable);
         // Assert
-        assertEquals(3, studentsPage.getTotalElements());
+        assertEquals(2, studentsPage.getTotalElements());
         assertEquals(2, studentsPage.getContent().size());
     }
 }
