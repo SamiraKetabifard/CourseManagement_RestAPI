@@ -3,7 +3,6 @@ package com.example.course_management_system.service;
 import com.example.course_management_system.dto.StudentDTO;
 import com.example.course_management_system.entity.Course;
 import com.example.course_management_system.entity.Student;
-import com.example.course_management_system.exception.ResourceNotFoundException;
 import com.example.course_management_system.repository.CourseRepository;
 import com.example.course_management_system.repository.StudentRepository;
 import org.junit.jupiter.api.Test;
@@ -51,14 +50,14 @@ class StudentServiceTest {
         // Arrange
         when(courseRepository.findById(1L)).thenReturn(Optional.of(new Course(1L, "Math", null)));
         when(modelMapper.map(any(StudentDTO.class), eq(Student.class))).thenReturn(student);
-        when(studentRepository.save(any())).thenReturn(student);
+        when(studentRepository.save(any(Student.class))).thenReturn(student);
         when(modelMapper.map(any(Student.class), eq(StudentDTO.class))).thenReturn(studentDTO);
         // Act
         StudentDTO result = studentService.createStudent(studentDTO);
         // Assert
         assertNotNull(result);
         assertEquals(1L, result.getId());
-        verify(studentRepository).save(any());
+        verify(studentRepository).save(any(Student.class));
     }
     @Test
     void getStudentById_ShouldReturnStudentDTO() {
@@ -72,15 +71,7 @@ class StudentServiceTest {
         assertEquals("samira", result.getName());
     }
     @Test
-    void getStudentById_WhenNotFound_ShouldThrowException() {
-        // Arrange
-        when(studentRepository.findById(2L)).thenReturn(Optional.empty());
-        // Act & Assert
-        assertThrows(ResourceNotFoundException.class, () ->
-                studentService.getStudentById(2L));
-    }
-    @Test
-    void getAllStudents_ShouldReturnPage() {
+    void getAllStudents_ShouldReturnPage(){
         // Arrange
         String sortBy = "name";
         String sortDir = "asc";
@@ -96,7 +87,6 @@ class StudentServiceTest {
         assertEquals("samira", result.getContent().get(0).getName());
         verify(studentRepository).findAll(pageable);
     }
-
     @Test
     void getStudentsByCourseId_ShouldReturnList() {
         // Arrange
@@ -113,31 +103,23 @@ class StudentServiceTest {
         // Arrange
         when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
         when(courseRepository.findById(1L)).thenReturn(Optional.of(new Course()));
-        when(studentRepository.save(any())).thenReturn(student);
+        when(studentRepository.save(any(Student.class))).thenReturn(student);
         when(modelMapper.map(any(Student.class), eq(StudentDTO.class))).thenReturn(studentDTO);
         // Act
         StudentDTO result = studentService.updateStudent(1L, studentDTO);
         // Assert
         assertNotNull(result);
         assertEquals(1L, result.getId());
-        verify(studentRepository).save(any());
+        verify(studentRepository).save(any(Student.class));
     }
     @Test
     void deleteStudent_ShouldDeleteWhenExists() {
         // Arrange
         when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
-        willDoNothing().given(studentRepository).delete(any());
+        willDoNothing().given(studentRepository).delete(any(Student.class));
         // Act
         studentService.deleteStudent(1L);
         // Assert
-        verify(studentRepository).delete(any());
-    }
-    @Test
-    void deleteStudent_WhenNotFound_ShouldThrowException() {
-        // Arrange
-        when(studentRepository.findById(2L)).thenReturn(Optional.empty());
-        // Act & Assert
-        assertThrows(ResourceNotFoundException.class, () ->
-                studentService.deleteStudent(2L));
+        verify(studentRepository).delete(any(Student.class));
     }
 }

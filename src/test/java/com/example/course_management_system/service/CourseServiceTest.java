@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.*;
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -72,11 +72,24 @@ class CourseServiceTest {
         assertThrows(ResourceNotFoundException.class, () ->
                 courseService.getCourseById(2L));
     }
+    /*  @Test
+        void shouldReturnPagedCourses() {
+    //Arrange
+        when(courseRepository.findAll(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(course)));
+        when(modelMapper.map(any(), eq(CourseDTO.class)))
+                .thenReturn(courseDTO);
+    //Act
+        Page<CourseDTO> result = courseService.getAllCourses(0, 10, "name", "asc");
+    //Assert
+        assertEquals(1, result.getTotalElements());
+        assertEquals("Math", result.getContent().get(0).getName());
+}*/
     @Test
     void getAllCourses_ShouldReturnPage() {
         // Arrange
         Pageable pageable = PageRequest.of(0, 10, Sort.by("name").ascending());
-        Page<Course> page = new PageImpl<>(Collections.singletonList(course));
+        Page<Course> page = new PageImpl<>(List.of(course));
 
         when(courseRepository.findAll(pageable)).thenReturn(page);
         when(modelMapper.map(any(Course.class), eq(CourseDTO.class))).thenReturn(courseDTO);
