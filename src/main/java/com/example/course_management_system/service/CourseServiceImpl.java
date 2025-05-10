@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +20,6 @@ public class CourseServiceImpl implements CourseService {
     private final ModelMapper modelMapper;
 
     @Override
-    @Transactional
     public CourseDTO createCourse(CourseDTO courseDTO) {
         Course course = modelMapper.map(courseDTO, Course.class);
         Course savedCourse = courseRepository.save(course);
@@ -46,7 +44,6 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    @Transactional
     public CourseDTO updateCourse(Long id, CourseDTO courseDTO) {
         Course existingCourse = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + id));
@@ -54,9 +51,7 @@ public class CourseServiceImpl implements CourseService {
         Course updatedCourse = courseRepository.save(existingCourse);
         return modelMapper.map(updatedCourse, CourseDTO.class);
     }
-
     @Override
-    @Transactional
     public void deleteCourse(Long id) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + id));

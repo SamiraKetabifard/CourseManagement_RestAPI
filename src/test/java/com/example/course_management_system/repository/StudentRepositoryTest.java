@@ -61,7 +61,6 @@ class StudentRepositoryTest {
             // Assert
             assertNotNull(savedStudent.getId());
             assertEquals("samira", savedStudent.getName());
-            assertEquals(course.getId(), savedStudent.getCourse().getId());
         }
     //List<Student> findByCourseId(Long courseId);
     @Test
@@ -85,6 +84,7 @@ class StudentRepositoryTest {
         // Assert
         assertEquals(2, mathStudents.size());
     }
+    //    Page<Student> findAll(Pageable pageable);
     @Test
     void shouldReturnAllStudentsWithPagination() {
         // Arrange

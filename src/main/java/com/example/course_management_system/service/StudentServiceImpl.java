@@ -26,7 +26,6 @@ public class StudentServiceImpl implements StudentService {
     private final ModelMapper modelMapper;
 
     @Override
-    @Transactional
     public StudentDTO createStudent(StudentDTO studentDTO) {
         Course course = courseRepository.findById(studentDTO.getCourseId())
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + studentDTO.getCourseId()));
@@ -63,7 +62,6 @@ public class StudentServiceImpl implements StudentService {
                 .collect(Collectors.toList());
     }
     @Override
-    @Transactional
     public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
         Student existingStudent = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
@@ -81,7 +79,6 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    @Transactional
     public void deleteStudent(Long id) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
