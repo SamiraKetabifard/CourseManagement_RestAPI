@@ -25,14 +25,12 @@ public class CourseServiceImpl implements CourseService {
         Course savedCourse = courseRepository.save(course);
         return modelMapper.map(savedCourse, CourseDTO.class);
     }
-
     @Override
     public CourseDTO getCourseById(Long id) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + id));
         return modelMapper.map(course, CourseDTO.class);
     }
-
     @Override
     public Page<CourseDTO> getAllCourses(int page, int size, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
@@ -42,7 +40,6 @@ public class CourseServiceImpl implements CourseService {
         Page<Course> courses = courseRepository.findAll(pageable);
         return courses.map(course -> modelMapper.map(course, CourseDTO.class));
     }
-
     @Override
     public CourseDTO updateCourse(Long id, CourseDTO courseDTO) {
         Course existingCourse = courseRepository.findById(id)

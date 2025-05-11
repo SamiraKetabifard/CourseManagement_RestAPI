@@ -21,13 +21,11 @@ public class StudentController {
         StudentDTO createdStudent = studentService.createStudent(studentDTO);
         return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
     }
-
     @GetMapping("/get/{id}")
     public ResponseEntity<StudentDTO> getStudentById(@PathVariable Long id) {
         StudentDTO studentDTO = studentService.getStudentById(id);
         return ResponseEntity.ok(studentDTO);
     }
-
     @GetMapping("/getall")
     public ResponseEntity<Page<StudentDTO>> getAllStudents(
             @RequestParam(defaultValue = "0") int page,
@@ -37,12 +35,10 @@ public class StudentController {
         Page<StudentDTO> students = studentService.getAllStudents(page, size, sortBy, sortDir);
         return ResponseEntity.ok(students);
     }
-
     @GetMapping("getcourse/{courseId}")
     public ResponseEntity<List<StudentDTO>> getStudentsByCourseId(@PathVariable Long courseId) {
         return ResponseEntity.ok(studentService.getStudentsByCourseId(courseId));
     }
-
     @PutMapping("/edit/{id}")
     public ResponseEntity<StudentDTO> updateStudent(
             @PathVariable Long id, @RequestBody StudentDTO studentDTO) {

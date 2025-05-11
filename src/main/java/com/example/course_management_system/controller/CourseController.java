@@ -20,13 +20,11 @@ public class CourseController {
         CourseDTO createdCourse = courseService.createCourse(courseDTO);
         return new ResponseEntity<>(createdCourse, HttpStatus.CREATED);
     }
-
     @GetMapping("/get/{id}")
     public ResponseEntity<CourseDTO> getCourseById(@PathVariable Long id) {
         CourseDTO courseDTO = courseService.getCourseById(id);
         return ResponseEntity.ok(courseDTO);
     }
-
     @GetMapping("/getall")
     public ResponseEntity<Page<CourseDTO>> getAllCourses(
             @RequestParam(defaultValue = "0") int page,
@@ -36,14 +34,12 @@ public class CourseController {
         Page<CourseDTO> courses = courseService.getAllCourses(page, size, sortBy, sortDir);
         return ResponseEntity.ok(courses);
     }
-
     @PutMapping("/edit/{id}")
     public ResponseEntity<CourseDTO> updateCourse(
             @PathVariable Long id, @RequestBody CourseDTO courseDTO) {
         CourseDTO updatedCourse = courseService.updateCourse(id, courseDTO);
         return ResponseEntity.ok(updatedCourse);
     }
-
     @DeleteMapping("/del/{id}")
     public ResponseEntity<String> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);

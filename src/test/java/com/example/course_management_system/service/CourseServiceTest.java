@@ -128,7 +128,6 @@ class CourseServiceTest {
         // Act
         courseService.deleteCourse(1L);
         // Assert
-
         verify(courseRepository).delete(any(Course.class));
     }
     @Test

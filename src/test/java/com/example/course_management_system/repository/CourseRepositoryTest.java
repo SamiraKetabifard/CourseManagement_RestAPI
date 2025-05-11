@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
@@ -89,16 +90,15 @@ class CourseRepositoryTest {
     @Test
     void shouldUpdateCourse() {
         // Arrange
-        Course course = Course.builder()
+        Course course = courseRepository.save(Course.builder()
                 .name("Math")
-                .build();
-        Course savedCourse = courseRepository.save(course);
+                .build());
         // Act
-        savedCourse.setName("Math2");
-        courseRepository.save(savedCourse);
-        Course updatedCourse = courseRepository.findById(savedCourse.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
+        course.setName("Math2");
+        courseRepository.save(course);
         // Assert
+        Course updatedCourse = courseRepository.findById(course.getId())
+                .orElseThrow();
         assertThat(updatedCourse.getName()).isEqualTo("Math2");
     }
     @Test

@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,21 +28,17 @@ public class StudentServiceImpl implements StudentService {
     public StudentDTO createStudent(StudentDTO studentDTO) {
         Course course = courseRepository.findById(studentDTO.getCourseId())
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + studentDTO.getCourseId()));
-
         Student student = modelMapper.map(studentDTO, Student.class);
         student.setCourse(course);
-
         Student savedStudent = studentRepository.save(student);
         return modelMapper.map(savedStudent, StudentDTO.class);
     }
-
     @Override
     public StudentDTO getStudentById(Long id) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
         return modelMapper.map(student, StudentDTO.class);
     }
-
     @Override
     public Page<StudentDTO> getAllStudents(int page, int size, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
@@ -65,19 +60,15 @@ public class StudentServiceImpl implements StudentService {
     public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
         Student existingStudent = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
-
         Course course = courseRepository.findById(studentDTO.getCourseId())
                 .orElseThrow(() -> new ResourceNotFoundException
                         ("Course not found with id: " + studentDTO.getCourseId()));
-
         existingStudent.setName(studentDTO.getName());
         existingStudent.setEmail(studentDTO.getEmail());
         existingStudent.setCourse(course);
-
         Student updatedStudent = studentRepository.save(existingStudent);
         return modelMapper.map(updatedStudent, StudentDTO.class);
     }
-
     @Override
     public void deleteStudent(Long id) {
         Student student = studentRepository.findById(id)
