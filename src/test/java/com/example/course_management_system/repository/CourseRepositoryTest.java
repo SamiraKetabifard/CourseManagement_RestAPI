@@ -1,7 +1,6 @@
 package com.example.course_management_system.repository;
 
 import com.example.course_management_system.entity.Course;
-import com.example.course_management_system.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
-
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -104,7 +102,9 @@ class CourseRepositoryTest {
     @Test
     void shouldDeleteCourseById() {
         // Arrange
-        Course course = Course.builder().name("Math").build();
+        Course course = Course.builder().
+                name("Math").
+                build();
         Course savedCourse = courseRepository.save(course);
         // Act
         courseRepository.deleteById(savedCourse.getId());

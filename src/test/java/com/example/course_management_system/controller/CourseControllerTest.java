@@ -112,17 +112,17 @@ class CourseControllerTest {
         willDoNothing().given(courseService).deleteCourse(1L);
         // Act & Assert
         mockMvc.perform(delete("/courses/del/{id}", 1L))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andExpect(content().string("Course deleted"));
     }
     @Test
-    void deleteCourse_WhenNotFound_ShouldReturn404() throws Exception {
-        // Arrange
-        willThrow(new ResourceNotFoundException("Course not found"))
+    void deleteCourseById_whenNotFound_shouldReturn404() throws Exception {
+        //arrange
+        willThrow(new ResourceNotFoundException("Course not found with id: 2"))
                 .given(courseService).deleteCourse(2L);
-        // Act & Assert
+        //act & assert
         mockMvc.perform(delete("/courses/del/{id}", 2L))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Course not found"));
+                .andExpect(content().string("Course not found with id: 2"));
     }
 }
