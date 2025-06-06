@@ -91,12 +91,11 @@ class CourseRepositoryTest {
         Course course = courseRepository.save(Course.builder()
                 .name("Math")
                 .build());
-        // Act
         course.setName("Math2");
         courseRepository.save(course);
-        // Assert
-        Course updatedCourse = courseRepository.findById(course.getId())
-                .orElseThrow();
+        //act
+        Course updatedCourse = courseRepository.findById(course.getId()).orElseThrow();
+        //assert
         assertThat(updatedCourse.getName()).isEqualTo("Math2");
     }
     @Test

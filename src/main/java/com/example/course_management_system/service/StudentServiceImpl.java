@@ -48,7 +48,6 @@ public class StudentServiceImpl implements StudentService {
         Page<Student> students = studentRepository.findAll(pageable);
         return students.map(student -> modelMapper.map(student, StudentDTO.class));
     }
-
     @Override
     public List<StudentDTO> getStudentsByCourseId(Long courseId) {
         List<Student> students = studentRepository.findByCourseId(courseId);

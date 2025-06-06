@@ -84,7 +84,7 @@ class CourseServiceTest {
     //Assert
         assertEquals(1, result.getTotalElements());
         assertEquals("Math", result.getContent().get(0).getName());
-}*/
+   }*/
     @Test
     void getAllCourses_ShouldReturnPage() {
         // Arrange

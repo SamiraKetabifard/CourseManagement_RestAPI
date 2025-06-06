@@ -125,4 +125,26 @@ class CourseControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Course not found with id: 2"));
     }
+    @Test
+    void getCourseById_WithInvalidIdFormat_ShouldReturnBadRequest() throws Exception {
+        // Act & Assert
+        mockMvc.perform(get("/courses/get/{id}", "invalid-id"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void deleteCourse_WithInvalidIdFormat_ShouldReturnBadRequest() throws Exception {
+        // Act & Assert
+        mockMvc.perform(delete("/courses/del/{id}", "invalid-id"))
+                .andExpect(status().isBadRequest());
+    }
+    @Test
+    void createCourse_WithNullBody_ShouldReturnBadRequest() throws Exception {
+        // Act & Assert
+        mockMvc.perform(post("/courses/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(""))
+                .andExpect(status().isBadRequest());
+    }
+
 }

@@ -41,12 +41,12 @@ class StudentRepositoryTest {
     private CourseRepository courseRepository;
 
     @BeforeEach
-    void setUp() {
+    void setUp(){
         studentRepository.deleteAll();
         courseRepository.deleteAll();
     }
         @Test
-        void shouldSaveStudentWithCourse() {
+        void shouldSaveStudentWithCourse(){
             // Arrange
             Course course = courseRepository.save(Course.builder()
                             .name("Math")
