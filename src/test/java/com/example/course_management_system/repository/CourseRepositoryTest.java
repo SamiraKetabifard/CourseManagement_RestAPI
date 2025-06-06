@@ -111,4 +111,115 @@ class CourseRepositoryTest {
         Optional<Course> deletedCourse = courseRepository.findById(savedCourse.getId());
         assertTrue(deletedCourse.isEmpty());
     }
+
+    @Test
+    void shouldNotSaveCourseWhenNameIsNull() {
+        // Arrange
+        Course course = Course.builder()
+                .name(null)  // invalid null name
+                .build();
+
+        // Act & Assert
+        assertThrows(Exception.class, () -> courseRepository.save(course));
+    }
+
+    @Test
+    void shouldNotFindCourseByNonExistentId() {
+        // Arrange
+        Long nonExistentId = 999L;
+
+        // Act
+        Optional<Course> foundCourse = courseRepository.findById(nonExistentId);
+
+        // Assert
+        assertThat(foundCourse).isEmpty();
+    }
+
+    @Test
+    void shouldReturnEmptyPageWhenNoCoursesExist() {
+        // Arrange
+        Pageable pageable = PageRequest.of(0, 10);
+
+        // Act
+        Page<Course> coursesPage = courseRepository.findAll(pageable);
+
+        // Assert
+        assertThat(coursesPage.getContent()).isEmpty();
+        assertThat(coursesPage.getTotalElements()).isZero();
+    }
+
+    @Test
+    void shouldReturnEmptyListForOutOfBoundsPage() {
+        // Arrange
+        courseRepository.save(Course.builder().name("Math").build());
+        Pageable pageable = PageRequest.of(1, 10);  // page 1 when only 1 item exists
+
+        // Act
+        Page<Course> coursesPage = courseRepository.findAll(pageable);
+
+        // Assert
+        assertThat(coursesPage.getContent()).isEmpty();
+        assertThat(coursesPage.getTotalElements()).isEqualTo(1);
+    }
+
+    @Test
+    void shouldNotUpdateNonExistentCourse() {
+        // Arrange
+        Long nonExistentId = 999L;
+        Course nonExistentCourse = Course.builder()
+                .id(nonExistentId)
+                .name("NonExistent")
+                .build();
+
+        // Act & Assert
+        assertThrows(Exception.class, () -> courseRepository.save(nonExistentCourse));
+    }
+
+    @Test
+    void shouldNotDeleteNonExistentCourse() {
+        // Arrange
+        Long nonExistentId = 999L;
+
+        // Act
+        courseRepository.deleteById(nonExistentId);
+
+        // Assert (verify no exception thrown for non-existent delete)
+        assertThat(courseRepository.findById(nonExistentId)).isEmpty();
+    }
+
+    @Test
+    void shouldNotSaveDuplicateCourseNames() {
+        // Arrange
+        String duplicateName = "Math";
+        Course course1 = Course.builder().name(duplicateName).build();
+        Course course2 = Course.builder().name(duplicateName).build();
+
+        // Act
+        courseRepository.save(course1);
+
+        // Assert
+        assertThrows(Exception.class, () -> courseRepository.save(course2));
+    }
+
+    @Test
+    void shouldHandleVeryLongCourseNames() {
+        // Arrange
+        String longName = "A".repeat(500);  // assuming 255 is max in entity
+        Course course = Course.builder().name(longName).build();
+
+        // Act & Assert
+        assertThrows(Exception.class, () -> courseRepository.save(course));
+    }
+
+    @Test
+    void shouldNotSaveCourseWithInvalidId() {
+        // Arrange
+        Course course = Course.builder()
+                .id(-1L)  // invalid ID
+                .name("Invalid")
+                .build();
+
+        // Act & Assert
+        assertThrows(Exception.class, () -> courseRepository.save(course));
+    }
 }

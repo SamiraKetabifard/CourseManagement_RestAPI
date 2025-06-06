@@ -3,6 +3,7 @@ package com.example.course_management_system.service;
 import com.example.course_management_system.dto.StudentDTO;
 import com.example.course_management_system.entity.Course;
 import com.example.course_management_system.entity.Student;
+import com.example.course_management_system.exception.ResourceNotFoundException;
 import com.example.course_management_system.repository.CourseRepository;
 import com.example.course_management_system.repository.StudentRepository;
 import org.junit.jupiter.api.Test;
@@ -121,5 +122,98 @@ class StudentServiceTest {
         studentService.deleteStudent(1L);
         // Assert
         verify(studentRepository).delete(any(Student.class));
+    }
+
+    @Test
+    void createStudent_WithNonExistentCourse_ShouldThrowException() {
+        // Arrange
+        when(courseRepository.findById(99L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () ->
+                studentService.createStudent(
+                        StudentDTO.builder().courseId(99L).email("valid@email.com").name("name").build()
+                ));
+    }
+
+    @Test
+    void getStudentById_WhenNotFound_ShouldThrowException() {
+        // Arrange
+        when(studentRepository.findById(99L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () ->
+                studentService.getStudentById(99L));
+    }
+
+    @Test
+    void getStudentsByCourseId_WhenCourseHasNoStudents_ShouldReturnEmptyList() {
+        // Arrange
+        when(studentRepository.findByCourseId(99L)).thenReturn(List.of());
+
+        // Act
+        List<StudentDTO> result = studentService.getStudentsByCourseId(99L);
+
+        // Assert
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void updateStudent_WithNonExistentStudent_ShouldThrowException() {
+        // Arrange
+        when(studentRepository.findById(99L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () ->
+                studentService.updateStudent(99L, studentDTO));
+    }
+
+    @Test
+    void updateStudent_WithNonExistentCourse_ShouldThrowException() {
+        // Arrange
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+        when(courseRepository.findById(99L)).thenReturn(Optional.empty());
+        StudentDTO dtoWithInvalidCourse = StudentDTO.builder()
+                .id(1L)
+                .courseId(99L)
+                .email("valid@email.com")
+                .name("name")
+                .build();
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () ->
+                studentService.updateStudent(1L, dtoWithInvalidCourse));
+    }
+
+    @Test
+    void deleteStudent_WhenNotFound_ShouldThrowException() {
+        // Arrange
+        when(studentRepository.findById(99L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () ->
+                studentService.deleteStudent(99L));
+    }
+
+    @Test
+    void whenDatabaseErrorOccurs_ShouldThrowAppropriateException() {
+        // Arrange
+        when(studentRepository.findById(1L)).thenThrow(new RuntimeException("Database connection failed"));
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () ->
+                studentService.getStudentById(1L));
+    }
+
+    @Test
+    void whenModelMapperFails_ShouldThrowException() {
+        // Arrange
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+        when(modelMapper.map(any(Student.class), eq(StudentDTO.class)))
+                .thenThrow(new RuntimeException("Mapping failed"));
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () ->
+                studentService.getStudentById(1L));
     }
 }
