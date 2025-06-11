@@ -123,25 +123,21 @@ class StudentControllerTest {
         mockMvc.perform(get("/students/get/{id}", "invalid-id"))
                 .andExpect(status().isBadRequest());
     }
-
     @Test
     void getStudentsByCourseId_WhenCourseNotFound_ShouldReturnNotFound() throws Exception {
         // Arrange
         given(studentService.getStudentsByCourseId(999L))
                 .willThrow(new ResourceNotFoundException("Course not found"));
-
         // Act & Assert
         mockMvc.perform(get("/students/getcourse/{courseId}", 999L))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Course not found"));
     }
-
     @Test
     void updateStudent_WhenStudentNotFound_ShouldReturnNotFound() throws Exception {
         // Arrange
         given(studentService.updateStudent(eq(999L), any(StudentDTO.class)))
                 .willThrow(new ResourceNotFoundException("Student not found"));
-
         // Act & Assert
         mockMvc.perform(put("/students/edit/{id}", 999L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -149,19 +145,16 @@ class StudentControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Student not found"));
     }
-
     @Test
     void deleteStudent_WhenStudentNotFound_ShouldReturnNotFound() throws Exception {
         // Arrange
         willThrow(new ResourceNotFoundException("Student not found"))
                 .given(studentService).deleteStudent(999L);
-
         // Act & Assert
         mockMvc.perform(delete("/students/del/{id}", 999L))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Student not found"));
     }
-
     @Test
     void createStudent_WithNullBody_ShouldReturnBadRequest() throws Exception {
         // Act & Assert

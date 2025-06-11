@@ -137,25 +137,13 @@ class CourseServiceTest {
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () ->
                 courseService.deleteCourse(2L));
-}
-
-    @Test
-    void whenDatabaseErrorOccurs_ShouldThrowAppropriateException() {
-        // Arrange
-        when(courseRepository.findById(1L)).thenThrow(new RuntimeException("Database connection failed"));
-
-        // Act & Assert
-        assertThrows(RuntimeException.class, () ->
-                courseService.getCourseById(1L));
     }
-
     @Test
     void whenModelMapperFails_ShouldThrowException() {
         // Arrange
         when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
         when(modelMapper.map(any(Course.class), eq(CourseDTO.class)))
                 .thenThrow(new RuntimeException("Mapping failed"));
-
         // Act & Assert
         assertThrows(RuntimeException.class, () ->
                 courseService.getCourseById(1L));

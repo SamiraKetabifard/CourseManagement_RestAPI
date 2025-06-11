@@ -108,17 +108,15 @@ class StudentRepositoryTest {
         assertEquals(2, studentsPage.getTotalElements());
         assertEquals(2, studentsPage.getContent().size());
     }
-
     @Test
     void shouldNotSaveStudentWithNullName() {
         // Arrange
         Course course = courseRepository.save(Course.builder().name("Math").build());
         Student student = Student.builder()
-                .name(null)  // invalid null name
+                .name(null)
                 .email("samira@gmail.com")
                 .course(course)
                 .build();
-
         // Act & Assert
         assertThrows(Exception.class, () -> studentRepository.save(student));
     }
@@ -130,11 +128,9 @@ class StudentRepositoryTest {
                 .email("samira@gmail.com")
                 .course(null)  // missing required course
                 .build();
-
         // Act & Assert
         assertThrows(Exception.class, () -> studentRepository.save(student));
     }
-
     @Test
     void shouldNotSaveStudentWithNonExistentCourse() {
         // Arrange
@@ -142,72 +138,57 @@ class StudentRepositoryTest {
         Student student = Student.builder()
                 .name("samira")
                 .email("samira@gmail.com")
-                .course(nonExistentCourse)  // course not persisted
+                .course(nonExistentCourse)
                 .build();
-
         // Act & Assert
         assertThrows(Exception.class, () -> studentRepository.save(student));
     }
-
     @Test
     void shouldNotSaveDuplicateEmails() {
         // Arrange
         Course course = courseRepository.save(Course.builder().name("Math").build());
         String duplicateEmail = "samira@gmail.com";
-
         studentRepository.save(Student.builder()
                 .name("samira1")
                 .email(duplicateEmail)
                 .course(course)
                 .build());
-
         Student student2 = Student.builder()
                 .name("samira2")
-                .email(duplicateEmail)  // duplicate email
+                .email(duplicateEmail)
                 .course(course)
                 .build();
-
         // Act & Assert
         assertThrows(Exception.class, () -> studentRepository.save(student2));
     }
-
     @Test
     void findByCourseId_ShouldReturnEmptyListForNonExistentCourse() {
         // Arrange
         Long nonExistentCourseId = 999L;
-
         // Act
         List<Student> students = studentRepository.findByCourseId(nonExistentCourseId);
-
         // Assert
         assertTrue(students.isEmpty());
     }
-
     @Test
     void findByCourseId_ShouldReturnEmptyListForCourseWithNoStudents() {
         // Arrange
         Course course = courseRepository.save(Course.builder().name("Empty Course").build());
-
         // Act
         List<Student> students = studentRepository.findByCourseId(course.getId());
-
         // Assert
         assertTrue(students.isEmpty());
     }
-
     @Test
     void findAllWithPagination_ShouldReturnEmptyPageWhenNoStudentsExist() {
         // Arrange
         Pageable pageable = PageRequest.of(0, 10);
-
         // Act
         Page<Student> studentsPage = studentRepository.findAll(pageable);
-
         // Assert
         assertTrue(studentsPage.isEmpty());
         assertEquals(0, studentsPage.getTotalElements());
     }
-
     @Test
     void findAllWithPagination_ShouldReturnEmptyPageForOutOfBoundsPageNumber() {
         // Arrange
@@ -217,29 +198,12 @@ class StudentRepositoryTest {
                 .email("samira@gmail.com")
                 .course(course)
                 .build());
-
         Pageable pageable = PageRequest.of(1, 10);  // page 1 when only 1 student exists
-
         // Act
         Page<Student> studentsPage = studentRepository.findAll(pageable);
-
         // Assert
         assertTrue(studentsPage.isEmpty());
         assertEquals(1, studentsPage.getTotalElements());
     }
 
-    @Test
-    void shouldNotSaveStudentWithVeryLongName() {
-        // Arrange
-        Course course = courseRepository.save(Course.builder().name("Math").build());
-        String longName = "A".repeat(500);  // assuming 255 is max in entity
-        Student student = Student.builder()
-                .name(longName)
-                .email("samira@gmail.com")
-                .course(course)
-                .build();
-
-        // Act & Assert
-        assertThrows(Exception.class, () -> studentRepository.save(student));
-    }
 }

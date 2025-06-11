@@ -17,7 +17,6 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-//for controller layer
 @WebMvcTest(CourseController.class)
 class CourseControllerTest {
 
@@ -131,7 +130,6 @@ class CourseControllerTest {
         mockMvc.perform(get("/courses/get/{id}", "invalid-id"))
                 .andExpect(status().isBadRequest());
     }
-
     @Test
     void deleteCourse_WithInvalidIdFormat_ShouldReturnBadRequest() throws Exception {
         // Act & Assert
@@ -146,5 +144,4 @@ class CourseControllerTest {
                         .content(""))
                 .andExpect(status().isBadRequest());
     }
-
 }
