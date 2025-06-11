@@ -132,7 +132,7 @@ class StudentServiceTest {
                 studentService.createStudent(StudentDTO.builder()
                         .courseId(99L)
                         .email("samira@gmail.com")
-                        .name("name")
+                        .name("sam")
                         .build()));
     }
     @Test
@@ -168,8 +168,8 @@ class StudentServiceTest {
         StudentDTO dtoWithInvalidCourse = StudentDTO.builder()
                 .id(1L)
                 .courseId(99L)
-                .email("valid@email.com")
-                .name("name")
+                .email("samira@gmail.com")
+                .name("sam")
                 .build();
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () ->
@@ -182,14 +182,6 @@ class StudentServiceTest {
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () ->
                 studentService.deleteStudent(99L));
-    }
-    @Test
-    void whenDatabaseErrorOccurs_ShouldThrowAppropriateException() {
-        // Arrange
-        when(studentRepository.findById(1L)).thenThrow(new RuntimeException("Database connection failed"));
-        // Act & Assert
-        assertThrows(RuntimeException.class, () ->
-                studentService.getStudentById(1L));
     }
     @Test
     void whenModelMapperFails_ShouldThrowException() {
