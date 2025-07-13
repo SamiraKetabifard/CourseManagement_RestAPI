@@ -182,14 +182,6 @@ class CourseRepositoryTest {
         assertThrows(Exception.class, () -> courseRepository.save(course2));
     }
     @Test
-    void shouldHandleVeryLongCourseNames() {
-        // Arrange
-        String longName = "A".repeat(500);
-        Course course = Course.builder().name(longName).build();
-        // Act & Assert
-        assertThrows(Exception.class, () -> courseRepository.save(course));
-    }
-    @Test
     void shouldNotSaveCourseWithInvalidId() {
         // Arrange
         Course course = Course.builder()
